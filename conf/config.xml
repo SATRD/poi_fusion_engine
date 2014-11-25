@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<configuration>
+  <DB>
+    <connectionString>127.0.0.1</connectionString>
+    <port>5432</port>
+	<user>postgres</user>
+    <pwd>postgres</pwd>
+    <name>ocd_tenerife</name>
+  </DB>
+  <platform>linux</platform>
+  <installDir>/var/www/projects/ficontent/</installDir>
+  <mappingDir>/var/www/projects/ficontent/</mappingDir>
+  <fusionDir>/var/www/projects/ficontent/</fusionDir>
+  <apiRulesDir>/var/www/projects/ficontent/</apiRulesDir>
+</configuration>

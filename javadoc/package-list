@@ -1,0 +1,6 @@
+org.upv.satrd.fic2.fe.config
+org.upv.satrd.fic2.fe.connectors.citySDK
+org.upv.satrd.fic2.fe.db
+org.upv.satrd.fic2.fe.fusionrules
+org.upv.satrd.fic2.fe.main
+org.upv.satrd.fic2.fe.test

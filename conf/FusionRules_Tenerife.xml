@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<fusion_rules city="tenerife" bbox="28.402909,-16.438604,28.564655,-16.161199" fe_version="1.0">
+	<fusion_rule category="museum" limit="50">
+		<general_settings>
+			<location>
+				<source>poiproxy.local</source>				
+				<source>dbpedia</source>
+			</location>
+			<name>
+				<source>poiproxy.local</source>					
+				<source>dbpedia</source>
+			</name>
+			<description>
+				<source>dbpedia</source>
+				<source>poiproxy.local</source>					
+			</description>
+			<image>
+				<active>true</active>
+				<limit>10</limit>
+				<source>flickr</source>							
+			</image>				  
+		</general_settings>
+		<specific_settings>			
+			<max_distance>50</max_distance>			
+			<similarity_percentage>70</similarity_percentage>
+		</specific_settings>
+	</fusion_rule>
+	
+	<fusion_rule category="tourist_info" limit="50">
+		<general_settings>
+			<location>
+				<source>poiproxy.local</source>					
+			</location>
+			<name>
+				<source>poiproxy.local</source>				
+			</name>
+			<description>				
+				<source>poiproxy.local</source>				
+			</description>
+			<image>
+				<active>true</active>
+				<limit>10</limit>
+				<source>flickr</source>							
+			</image>
+				  
+		</general_settings>
+		<specific_settings>			
+			<max_distance>30</max_distance>			
+			<similarity_percentage>70</similarity_percentage>
+		</specific_settings>
+	</fusion_rule>
+	
+	<fusion_rule category="accommodation" limit="50">
+		<general_settings>
+			<location>
+				<source>poiproxy.local</source>					
+			</location>
+			<name>
+				<source>poiproxy.local</source>				
+			</name>
+			<description>
+				<source>poiproxy.local</source>						
+			</description>
+			<image>
+				<active>true</active>
+				<limit>10</limit>
+				<source>flickr</source>
+				<source>panoramio</source>				
+			</image>
+				  
+		</general_settings>
+		<specific_settings>			
+			<max_distance>30</max_distance>			
+			<similarity_percentage>70</similarity_percentage>
+		</specific_settings>
+	</fusion_rule>
+	
+	
+	<fusion_rule category="monument" limit="50">
+		<general_settings>
+			<location>
+				<source>poiproxy.local</source>				
+				<source>dbpedia</source>
+			</location>
+			<name>
+				<source>poiproxy.local</source>				
+				<source>dbpedia</source>
+			</name>
+			<description>
+				<source>dbpedia</source>
+				<source>poiproxy.local</source>						
+			</description>
+			<image>
+				<active>true</active>
+				<limit>10</limit>
+				<source>flickr</source>								
+			</image>
+				  
+		</general_settings>
+		<specific_settings>			
+			<max_distance>30</max_distance>			
+			<similarity_percentage>70</similarity_percentage>
+		</specific_settings>
+	</fusion_rule>
+	
+	
+
+ 
+	<fusion_rule category="shop" limit="50">
+		<general_settings>
+			<location>								
+				<source>osm</source>
+				<source>dbpedia</source>
+			</location>
+			<name>								
+				<source>osm</source>
+				<source>dbpedia</source>
+			</name>
+			<description>
+				<source>dbpedia</source>				
+				<source>osm</source>	
+			</description>
+			<image>
+				<active>true</active>
+				<limit>10</limit>
+				<source>flickr</source>							
+			</image>
+				  
+		</general_settings>
+		<specific_settings>			
+			<max_distance>30</max_distance>			
+			<similarity_percentage>70</similarity_percentage>
+		</specific_settings>
+	</fusion_rule>		
+
+	
+
+</fusion_rules>

@@ -6,6 +6,7 @@ Currently only CitySDK interface is supported for:
 - Providing an interface to external applications (output interface)
 
 The FE is still under development and has only been tested  with CitySDK interfaces for OSM, DBPedia and PoiProxy for certain categories.
+More information about CitySDK and development issues can be found in http://www.citysdk.eu/developers/
 
 
 

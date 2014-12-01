@@ -407,6 +407,22 @@ public class CommonUtils {
 	}
 	
 	
+	//This method scans a POI given as a JSON object and returns its longitude
+	public static String getAddress(JSONObject poi){
+		
+		String address = null;
+		
+		try {
+			address = poi.getJSONObject("location").getJSONObject("address").getString("value");			 
+			
+		} catch (JSONException e) {
+			log.error("Error CommonUtils.getAddress(): "+e.getMessage());
+		}
+		
+		return address;
+	}
+	
+	
 	//This method return current date as a java.sql.Date
 	public static Date getFormatedDateAsDate(){
 		

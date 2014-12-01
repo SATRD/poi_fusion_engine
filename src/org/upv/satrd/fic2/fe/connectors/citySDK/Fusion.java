@@ -47,6 +47,9 @@ public class Fusion {
 			JSONArray object3 = new JSONArray();
 			int i = 0;
 			
+			
+			//TODO we are not combining the location.address element of both POIs. Now we just take the first one (the one that conditions position)   
+			
 					
 			//////////////////////
 			//Add name. We take the one that first appears in the name ArrayList
@@ -292,7 +295,7 @@ public class Fusion {
 			
 			if (poiid!=null){    			
 			    
-				//This is just visual output of pois being inserted. You may comment these two lines
+				//This is just visual output of pois being inserted. You may comment/remove these two lines
 			    System.out.println("poiid: "+poiid);
 			    System.out.println(poi.toString());		    
 			    
@@ -321,6 +324,41 @@ public class Fusion {
 			    }
 			    
 			   
+			    //Insert the address value
+			    String  address= CommonUtils.getAddress(poi);
+			    if (address !=null){		
+								
+					type = "address"; 
+					
+					LabelType labeltype = LabelType.getLabelTypeClassByName(con, type);
+					
+					if (labeltype ==null){
+						//the ' address' LabelType has not yet been inserted (probably it should during initialization). Create it
+						labeltype = new LabelType(type);
+						typeId = LabelType.saveLabelType(con, labeltype);					
+					}else{
+						typeId = labeltype.getId();
+					}	
+										
+					//value
+					value = address;					
+					
+					
+					//'source' is the one we have used for the position
+					sourceId = Source.getSourceClassByName(con, position_sourceName).getId();			
+					
+					language = "";
+						
+					license = "";				
+					
+					updated = CommonUtils.getFormatedDateAsDate();
+				    
+					POILabel poilabel = new POILabel(poiid,typeId, value, sourceId, language, licenseId, updated);
+					POILabel.savePOILabel(con, poilabel);
+								
+				}
+			    
+			    
 			    
 				//Insert description in the POILabel table
 			    try{

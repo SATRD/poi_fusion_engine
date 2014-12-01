@@ -345,7 +345,7 @@ public class OCD {
 					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//name field mandatory
-					String name = list.get(k).get("id").toString();
+					String name = list.get(k).get("name").toString();
 					
 					//city_id field mandatory
 					Integer city_id = new Integer ((list.get(k)).get("city").toString());	

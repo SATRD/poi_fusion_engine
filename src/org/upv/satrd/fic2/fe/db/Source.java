@@ -356,7 +356,7 @@ public class Source {
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//name field mandatory
 					String name = (list.get(k)).get("name").toString();					
@@ -418,7 +418,7 @@ public class Source {
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//name field mandatory
 					String name = (list.get(k)).get("name").toString();					

@@ -328,6 +328,30 @@ public class POILabel {
 	}
 	
 	
+	public static String getValuebyPOIidandLabelTypeName(Connection con, Integer poiId, String labeltypeName){			
+		
+		String address = null;
+		
+		//search POILabel by poiid and labeltype
+	    LabelType labeltype = LabelType.getLabelTypeClassByName(con, labeltypeName);
+	    
+	    if (labeltype !=null){	
+	    	Integer labeltypeId = labeltype.getId();
+	    	ArrayList<POILabel> poilabel_list = POILabel.getPOILabelListByPOIidAndLabelTypeId(con, poiId, labeltypeId);
+	    	
+	    	if ((poilabel_list!=null) && (!poilabel_list.isEmpty())){
+	    		
+	    		//typically we should only have one value/poilabel, take the first one	    		
+    			POILabel poilabel = poilabel_list.get(0);    			
+			    address = poilabel.getValue();	    		
+	    	}
+	    	
+	    }
+	
+		return address;
+	}
+	
+	
 	
 		
 	
@@ -380,6 +404,7 @@ public class POILabel {
 		try {
 			Statement stmt = con.createStatement();
 			sql = "SELECT * FROM poilabel WHERE poiid="+poiId;
+			//System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			Object aux=null;
 			
@@ -391,30 +416,31 @@ public class POILabel {
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//typeid field mandatory
-					Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());
+					Integer labeltypeId = new Integer((list.get(k)).get("typeid").toString());
 					
 					//value field mandatory
-					String value = (list.get(0)).get("value").toString();				
+					String value = (list.get(k)).get("value").toString();
+					
 					
 					//sourceId field mandatory
-					Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
+					Integer sourceId = new Integer((list.get(k)).get("sourceid").toString());				
 					
 					//language field optional
 					String language = null;
-					aux = (list.get(0)).get("language");				
+					aux = (list.get(k)).get("language");				
 					if (aux!=null) language = aux.toString();
 					
 					//licenseId mandatory, but maybe optional
 					Integer licenseId = null;
-					aux = (list.get(0)).get("licenseId");				
+					aux = (list.get(k)).get("licenseId");				
 					if (aux!=null) licenseId = new Integer(aux.toString());
 					
 					//updated field mandatory
 					Date updated = null;
-					aux = (list.get(0)).get("updated");
+					aux = (list.get(k)).get("updated");
 					updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
@@ -435,7 +461,7 @@ public class POILabel {
 		return poilabel_array;
 	}
 	
-public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connection con, Integer poiId, Integer labelTypeId){
+	public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connection con, Integer poiId, Integer labelTypeId){
 		
 		ArrayList<POILabel> poilabel_array = new ArrayList<POILabel>();
 		String sql;
@@ -456,30 +482,30 @@ public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connecti
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//typeid field mandatory
-					Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());
+					Integer labeltypeId = new Integer((list.get(k)).get("typeid").toString());
 					
 					//value field mandatory
-					String value = (list.get(0)).get("value").toString();				
+					String value = (list.get(k)).get("value").toString();				
 					
 					//sourceId field mandatory
-					Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
+					Integer sourceId = new Integer((list.get(k)).get("sourceid").toString());				
 					
 					//language field optional
 					String language = null;
-					aux = (list.get(0)).get("language");				
+					aux = (list.get(k)).get("language");				
 					if (aux!=null) language = aux.toString();
 					
 					//licenseId mandatory, but maybe optional
 					Integer licenseId = null;
-					aux = (list.get(0)).get("licenseId");				
+					aux = (list.get(k)).get("licenseId");				
 					if (aux!=null) licenseId = new Integer(aux.toString());
 					
 					//updated field mandatory
 					Date updated = null;
-					aux = (list.get(0)).get("updated");
+					aux = (list.get(k)).get("updated");
 					updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
@@ -523,30 +549,30 @@ public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connecti
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//poiid field mandatory
-					Integer poiId = new Integer((list.get(0)).get("poiid").toString());
+					Integer poiId = new Integer((list.get(k)).get("poiid").toString());
 					
 					//value field mandatory
-					String value = (list.get(0)).get("value").toString();				
+					String value = (list.get(k)).get("value").toString();				
 					
 					//sourceId field mandatory
-					Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
+					Integer sourceId = new Integer((list.get(k)).get("sourceid").toString());				
 					
 					//language field optional
 					String language = null;
-					aux = (list.get(0)).get("language");				
+					aux = (list.get(k)).get("language");				
 					if (aux!=null) language = aux.toString();
 					
 					//licenseId mandatory, but maybe optional
 					Integer licenseId = null;
-					aux = (list.get(0)).get("licenseId");				
+					aux = (list.get(k)).get("licenseId");				
 					if (aux!=null) licenseId = new Integer(aux.toString());
 					
 					//updated field mandatory
 					Date updated = null;
-					aux = (list.get(0)).get("updated");
+					aux = (list.get(k)).get("updated");
 					updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
@@ -589,30 +615,30 @@ public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connecti
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//poiid field mandatory
-					Integer poiId = new Integer((list.get(0)).get("poiid").toString());
+					Integer poiId = new Integer((list.get(k)).get("poiid").toString());
 					
 					//value field mandatory
-					String value = (list.get(0)).get("value").toString();				
+					String value = (list.get(k)).get("value").toString();				
 					
 					//sourceId field mandatory
-					Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());				
+					Integer labeltypeId = new Integer((list.get(k)).get("typeid").toString());				
 					
 					//language field optional
 					String language = null;
-					aux = (list.get(0)).get("language");				
+					aux = (list.get(k)).get("language");				
 					if (aux!=null) language = aux.toString();
 					
 					//licenseId mandatory, but maybe optional
 					Integer licenseId = null;
-					aux = (list.get(0)).get("licenseId");				
+					aux = (list.get(k)).get("licenseId");				
 					if (aux!=null) licenseId = new Integer(aux.toString());
 					
 					//updated field mandatory
 					Date updated = null;
-					aux = (list.get(0)).get("updated");
+					aux = (list.get(k)).get("updated");
 					updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
@@ -655,29 +681,29 @@ public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connecti
 				for (int k=0;k<list.size();k++){
 				
 					//id field mandatory
-					Integer id = new Integer((list.get(0)).get("id").toString());
+					Integer id = new Integer((list.get(k)).get("id").toString());
 					
 					//poiid field mandatory
-					Integer poiId = new Integer((list.get(0)).get("poiid").toString());
+					Integer poiId = new Integer((list.get(k)).get("poiid").toString());
 					
 					//typeid field mandatory
-					Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());
+					Integer labeltypeId = new Integer((list.get(k)).get("typeid").toString());
 					
 					//value field mandatory
-					String value = (list.get(0)).get("value").toString();				
+					String value = (list.get(k)).get("value").toString();				
 					
 					//sourceId field mandatory
-					Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
+					Integer sourceId = new Integer((list.get(k)).get("sourceid").toString());				
 					
 					//language field optional
 					String language = null;
-					aux = (list.get(0)).get("language");				
+					aux = (list.get(k)).get("language");				
 					if (aux!=null) language = aux.toString();
 					
 										
 					//updated field mandatory
 					Date updated = null;
-					aux = (list.get(0)).get("updated");
+					aux = (list.get(k)).get("updated");
 					updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);

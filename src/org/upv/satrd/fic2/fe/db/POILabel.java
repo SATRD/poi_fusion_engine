@@ -435,6 +435,71 @@ public class POILabel {
 		return poilabel_array;
 	}
 	
+public static ArrayList<POILabel> getPOILabelListByPOIidAndLabelTypeId (Connection con, Integer poiId, Integer labelTypeId){
+		
+		ArrayList<POILabel> poilabel_array = new ArrayList<POILabel>();
+		String sql;
+		
+		ArrayList<HashMap<String, Object>> list;
+		
+		try {
+			Statement stmt = con.createStatement();
+			sql = "SELECT * FROM poilabel WHERE poiid="+poiId+" AND typeid="+labelTypeId;
+			ResultSet rs = stmt.executeQuery(sql);
+			Object aux=null;
+			
+			
+			list = resultSetToArrayList(rs);
+			
+			if (!list.isEmpty()){	
+				
+				for (int k=0;k<list.size();k++){
+				
+					//id field mandatory
+					Integer id = new Integer((list.get(0)).get("id").toString());
+					
+					//typeid field mandatory
+					Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());
+					
+					//value field mandatory
+					String value = (list.get(0)).get("value").toString();				
+					
+					//sourceId field mandatory
+					Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
+					
+					//language field optional
+					String language = null;
+					aux = (list.get(0)).get("language");				
+					if (aux!=null) language = aux.toString();
+					
+					//licenseId mandatory, but maybe optional
+					Integer licenseId = null;
+					aux = (list.get(0)).get("licenseId");				
+					if (aux!=null) licenseId = new Integer(aux.toString());
+					
+					//updated field mandatory
+					Date updated = null;
+					aux = (list.get(0)).get("updated");
+					updated = Date.valueOf(aux.toString());				
+											 
+					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
+					
+					poilabel_array.add(poilabel);
+				}
+				
+			}			
+		
+			rs.close();
+	        stmt.close();
+			
+		} catch ( Exception e ) {
+			System.out.println("Error POILabel.getPOILabelListByPOIid(): "+e.getMessage());
+			log.error("Error POILabel.getPOILabelListByPOIid(): "+e.getMessage());
+		}
+		
+		return poilabel_array;
+	}
+	
 	
 	
 	public static ArrayList<POILabel> getPOILabelListByLabelTypeId (Connection con, Integer labeltypeId){

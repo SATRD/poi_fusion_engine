@@ -170,35 +170,39 @@ public class POILabel {
 		String sql;
 		PreparedStatement ps;		
 		
-			try{   	
-				
-				sql = "INSERT INTO POILabel (poiid,typeid,value,sourceId,language,licenseId,updated) VALUES (?,?,?,?,?,?,?)";	
-	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
-				ps.setInt(1,poilabel.getPOIId());
-				ps.setInt(2,poilabel.getLabelTypeId());		
-				//value field should be mandatory, but maybe one can insert NULL (e.g inserting source of POI.position as POILabel)
-				if (poilabel.getValue() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,poilabel.getValue());
-				ps.setInt(4,poilabel.getSourceId());
-				//language field might be set to null if it unknown
-				if (poilabel.getLanguage() == null) ps.setNull(5, java.sql.Types.VARCHAR); else ps.setString(5,poilabel.getLanguage());
-				//language field might be set to null if it unknown
-				if (poilabel.getLicenseId() == null) ps.setNull(6, java.sql.Types.INTEGER); else ps.setInt(6,poilabel.getLicenseId());
-				if (poilabel.getUpdated() == null) ps.setNull(7, java.sql.Types.DATE); else ps.setDate(7,poilabel.getUpdated());										
-				
-				//System.out.println(ps.toString());
-				ps.executeUpdate();
-				
-				ResultSet rs = ps.getGeneratedKeys();
-				if (rs.next()) { id = rs.getInt(1); }	
-								
-				rs.close();				
-		        ps.close();
-				
-			} catch ( SQLException e) {
-				System.out.println("Error POILabel.savePOILabel(): "+e.getMessage());
-				log.error("Error POILabel.savePOILabel(): "+e.getMessage());
-			}	
+		
+			//avoid inserting POILabels whose value is null or empty
+			if ((poilabel.getValue()!=null) && (!poilabel.getValue().trim().isEmpty()) ){
+				try{   	
+					
+					sql = "INSERT INTO POILabel (poiid,typeid,value,sourceId,language,licenseId,updated) VALUES (?,?,?,?,?,?,?)";	
+		
+					ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+					ps.setInt(1,poilabel.getPOIId());
+					ps.setInt(2,poilabel.getLabelTypeId());		
+					//value field should be mandatory, but maybe one can insert NULL (e.g inserting source of POI.position as POILabel)
+					if (poilabel.getValue() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,poilabel.getValue());
+					ps.setInt(4,poilabel.getSourceId());
+					//language field might be set to null if it unknown
+					if (poilabel.getLanguage() == null) ps.setNull(5, java.sql.Types.VARCHAR); else ps.setString(5,poilabel.getLanguage());
+					//language field might be set to null if it unknown
+					if (poilabel.getLicenseId() == null) ps.setNull(6, java.sql.Types.INTEGER); else ps.setInt(6,poilabel.getLicenseId());
+					if (poilabel.getUpdated() == null) ps.setNull(7, java.sql.Types.DATE); else ps.setDate(7,poilabel.getUpdated());										
+					
+					//System.out.println(ps.toString());
+					ps.executeUpdate();
+					
+					ResultSet rs = ps.getGeneratedKeys();
+					if (rs.next()) { id = rs.getInt(1); }	
+									
+					rs.close();				
+			        ps.close();
+					
+				} catch ( SQLException e) {
+					System.out.println("Error POILabel.savePOILabel(): "+e.getMessage());
+					log.error("Error POILabel.savePOILabel(): "+e.getMessage());
+				}	
+			}
 	
 		return id;
 	}
@@ -441,7 +445,7 @@ public class POILabel {
 					//updated field mandatory
 					Date updated = null;
 					aux = (list.get(k)).get("updated");
-					updated = Date.valueOf(aux.toString());				
+					if (aux!=null) updated = Date.valueOf(aux.toString());				
 											 
 					POILabel poilabel = new POILabel(id, poiId,labeltypeId,value,sourceId,language,licenseId,updated);
 					

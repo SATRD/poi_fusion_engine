@@ -436,7 +436,8 @@ public class Fusion {
 				
 				
 				
-				//Generate poilabel for 'name' and 'position' in the POI table. So we can know from which source 'name' and 'position' comes from
+				//Generate poilabel for 'name' and 'position' in the POI table. So we can know from which source 'name' and 'position' comes from.
+				//In these cases the 'value' field does not make sense, so we insert "-1" instead of null 
 				//name
 				LabelType labeltype = LabelType.getLabelTypeClassByName(con, "name");
 				Integer name_labeltypeid;

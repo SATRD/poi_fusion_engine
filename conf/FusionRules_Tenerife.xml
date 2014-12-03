@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<fusion_rules city="tenerife" bbox="28.402909,-16.438604,28.564655,-16.161199" fe_version="1.0">
+<fusion_rules city="tenerife" bbox="27.964418,-16.964231,28.647544,-16.055112" fe_version="1.0">
 	<fusion_rule category="museum" limit="50">
 		<general_settings>
 			<location>

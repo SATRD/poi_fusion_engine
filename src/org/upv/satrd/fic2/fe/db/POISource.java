@@ -67,7 +67,7 @@ public class POISource {
 			stmt = con.createStatement();
 			String sql;
 			
-				sql = "SELECT * FROM poisource WHERE poiid="+poiid+";";
+				sql = "SELECT * FROM poisource WHERE poiid="+poiid;
 			
 			
 			rs = stmt.executeQuery(sql);			
@@ -119,7 +119,7 @@ public class POISource {
 			if ( (poiproxyattribute == null) || (poiproxyattribute.isEmpty())){
 				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND poiid="+poiid+";";
 			}else{				
-				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND poiid="+poiid+" AND poiproxyattribute='"+poiproxyattribute+"';";
+				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND poiid="+poiid+" AND poiproxyattribute='"+poiproxyattribute+"'";
 			}
 			
 			rs = stmt.executeQuery(sql);			
@@ -164,7 +164,7 @@ public class POISource {
 			if ( (poiproxyattribute == null) || (poiproxyattribute.isEmpty())  ){
 				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND originalref='"+originalRef+"';";
 			}else{
-				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND originalref='"+originalRef+"' AND poiproxyattribute='"+poiproxyattribute+"';";
+				sql = "SELECT * FROM poisource WHERE sourceid="+sourceId+" AND originalref='"+originalRef+"' AND poiproxyattribute='"+poiproxyattribute+"'";
 			}			
 			
 			rs = stmt.executeQuery(sql);			
@@ -334,7 +334,7 @@ public class POISource {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

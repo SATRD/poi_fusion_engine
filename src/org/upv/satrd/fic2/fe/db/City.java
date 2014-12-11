@@ -69,7 +69,7 @@ public class City {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM city WHERE id="+id+";";
+			String sql = "SELECT * FROM city WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			
 			
@@ -109,7 +109,7 @@ public class City {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM city WHERE name='"+name+"';";
+			String sql = "SELECT * FROM city WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			
 			
@@ -154,14 +154,20 @@ public class City {
 				
 				sql = "INSERT INTO city (name,bbox) VALUES (?,?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				
+				ps = con.prepareStatement(sql, generatedColumns);
+						// Statement.RETURN_GENERATED_KEYS);	
 				ps.setString(1,city.getName());				
 				ps.setString(2,city.getBbox());						
 				
 				ps.executeUpdate();
 				
 				rs = ps.getGeneratedKeys();
-				if (rs.next()) { id = rs.getInt(1); }	
+				if (rs.next()) { 
+					id = rs.getInt(1);
+					
+				}	
 								
 				rs.close();				
 		        ps.close();
@@ -320,7 +326,7 @@ public class City {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

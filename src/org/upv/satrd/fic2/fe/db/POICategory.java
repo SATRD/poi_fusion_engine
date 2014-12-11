@@ -57,7 +57,7 @@ public class POICategory {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM poicategory WHERE poiid="+poiId+" AND categoryid="+categoryId+";";
+			String sql = "SELECT * FROM poicategory WHERE poiid="+poiId+" AND categoryid="+categoryId;
 			rs = stmt.executeQuery(sql);			
 			
 			list = resultSetToArrayList(rs);        		
@@ -183,7 +183,7 @@ public class POICategory {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

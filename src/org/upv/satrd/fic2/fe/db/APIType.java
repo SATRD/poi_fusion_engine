@@ -71,7 +71,7 @@ public class APIType {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM apitype WHERE id="+id+";";
+			String sql = "SELECT * FROM apitype WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux= null;
 			
@@ -119,7 +119,7 @@ public class APIType {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM apitype WHERE name='"+name+"';";
+			String sql = "SELECT * FROM apitype WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			Object aux=null;
 			
@@ -170,7 +170,10 @@ public class APIType {
 				
 				sql = "INSERT INTO apitype (name,description,apirules) VALUES (?,?,?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);
+				
 				ps.setString(1,apitype.getName());				
 				if (apitype.getDescription() == null) ps.setNull(2, java.sql.Types.VARCHAR); else ps.setString(2,apitype.getDescription());
 				if (apitype.getAPIRules() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,apitype.getAPIRules());						
@@ -341,7 +344,7 @@ public class APIType {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

@@ -76,7 +76,7 @@ public class Category {
 	
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM category WHERE id="+id+";";
+			String sql = "SELECT * FROM category WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux = null;
 			
@@ -127,7 +127,7 @@ public class Category {
 		
 			try {
 				stmt = con.createStatement();
-				String sql = "SELECT * FROM category WHERE name='"+name+"';";
+				String sql = "SELECT * FROM category WHERE name='"+name+"'";
 				rs = stmt.executeQuery(sql);
 				Object aux = null;
 				
@@ -179,9 +179,13 @@ public class Category {
 		
 		try{   	
 		
-			sql = "INSERT INTO category (name,description,level,icon) VALUES (?,?,?,?)";	
+			sql = "INSERT INTO category (name,description,\"level\",icon) VALUES (?,?,?,?)";	
 			
-			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+			String generatedColumns[] = { "id" };
+			ps = con.prepareStatement(sql,
+					generatedColumns);
+			
+			
 			ps.setString(1,category.getName());				
 			if (category.getDescription() == null) ps.setNull(2, java.sql.Types.VARCHAR); else ps.setString(2,category.getDescription());
 			ps.setInt(3, category.getLevel());
@@ -262,7 +266,7 @@ public class Category {
 		
 			try{   	
 				
-				sql = "UPDATE category SET name=?, description=?, level=?, icon=? WHERE id="+category.getId();
+				sql = "UPDATE category SET name=?, description=?, \"level\"=?, icon=? WHERE id="+category.getId();
 	
 				ps = con.prepareStatement(sql);	
 				ps.setString(1,category.getName());				
@@ -363,7 +367,7 @@ public class Category {
 			HashMap<String, Object> row = new HashMap<String, Object>();
 			
 			for(int i=1; i<=columns; i++){
-				row.put(md.getColumnName(i),rs.getObject(i));
+				row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 			}
 			
 			results.add(row);

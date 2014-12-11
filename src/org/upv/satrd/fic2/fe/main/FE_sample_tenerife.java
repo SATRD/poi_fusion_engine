@@ -1,10 +1,15 @@
 package org.upv.satrd.fic2.fe.main;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Properties;
+
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Definer.OnError;
+import org.apache.tools.ant.taskdefs.SQLExec;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +34,7 @@ public class FE_sample_tenerife {
 	
 	
 	private static String configurationFile = "conf/config.xml";
+	public static Configuration config = new Configuration(configurationFile);
 	
 	//@SuppressWarnings("rawtypes")
 	public static void main(String[] args) {
@@ -37,14 +43,36 @@ public class FE_sample_tenerife {
 		
 		
 		//Load configuration parameters of the OCD in order to access the PostGRESQL database
-		Configuration config = new Configuration(configurationFile);
-		Connection con = PostgreSQL.conectDB(config.getHost(), config.getPort(), config.getUser(), config.getPwd(), config.getName());	
+		// Configuration config = new Configuration(configurationFile);
+		Connection con = OutputDB.connectDB(
+				config.getConnectionString(),
+				config.getUser(),
+				config.getPwd(),
+				config.getDriverName());	
 		
 		
 		//Reset and Init database. FIXME It is supposed that psql is installed and in the path, otherwise we cannot execute any script
-		log.debug("Reseting database "+config.getName());
-		String sqlscript = "db/fe_ocd_reset.sql";
+		log.debug("Reseting tables in database "+config.getName()
+				+ " (user: " + config.getUser() + ")");
+		String sqlscript = config.getResetScript();
 		
+		File script_file = new File(
+				System.getProperty("user.dir") + File.separator + sqlscript);
+		try {
+			executeSql(
+					script_file,
+					config.getDriverName(),
+					config.getUser(),
+					config.getPwd(),
+					config.getConnectionString(),
+					config.getScriptSeparator());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+	        log.error(e1.getMessage()+".Exiting...");
+	        System.exit(-1);
+		}
+		
+		/*
 	     try {
 	         Runtime rt = Runtime.getRuntime();
 	         String executeSqlCommand = "psql"
@@ -58,9 +86,11 @@ public class FE_sample_tenerife {
 	      } catch (Exception e) {	        
 	        log.error(e.getMessage()+".Exiting...");
 	        System.exit(-1);
-	        
-	      }		
-	     log.debug("Database "+config.getName()+" has been reset");
+	      }
+	     */
+	     log.debug("Tables in database "+config.getName()
+	    		 + " (user " + config.getUser() + ") "
+	     		+ "have been reset");
 		
 		
 	    		
@@ -76,7 +106,7 @@ public class FE_sample_tenerife {
 	    log.debug("Fusion rules loaded");
 	    
 	    log.debug("Initializing database "+config.getName()+" with elements extracted from "+fusion_path);
-	    int ret = PostgreSQL.initDBFromXML(con, fusionRules);
+	    int ret = OutputDB.initDBFromXML(con, fusionRules);
 	    if (ret<0){
 	    	log.error("There was a problem inserting the data. Error in  PostgreSQL.initDBFromXML() method");
 	        System.exit(-1);
@@ -305,7 +335,7 @@ public class FE_sample_tenerife {
 	    	
 	    }	  
 	    
-		PostgreSQL.disconectDB(con);
+		OutputDB.disconnectDB(con);
 		
 		//System.out.println("Fin");
 		 
@@ -340,6 +370,50 @@ public class FE_sample_tenerife {
 		}
 		
 		return projectedCategory;
+	}
+	
+	
+	
+	public static void executeSql(
+			File sqlFile,
+			String driver,
+			String user,
+			String pwd,
+			String url,
+			String scr_sep) throws Exception {
+		
+	    final class SqlExecuter extends SQLExec {
+	        public SqlExecuter() {
+	            Project project = new Project();
+	            project.init();
+	            setProject(project);
+	            setTaskType("sql");
+	            setTaskName("sql");
+	        }
+	    }
+	    
+	    final class OnErrorContinue extends SQLExec.OnError {
+	    	
+	    	public OnErrorContinue() {
+	    		this.setValue("continue");
+	    	}
+	    	
+	    	public String[] getValues() {
+	    		return new String[]{"continue"};
+	    	}
+	    }
+
+	    SqlExecuter executer = new SqlExecuter();
+	    executer.setOnerror(new OnErrorContinue());
+	    // executer.setOutput(new File("c:/tempo/log_" + System.currentTimeMillis() + ".txt"));
+	    executer.setDelimiter(scr_sep);
+	    executer.setSrc(sqlFile);
+	    executer.setDriver(driver);
+	    executer.setPassword(pwd);
+	    executer.setUserid(user);
+	    executer.setUrl(url);
+	    executer.execute();
+	    
 	}
 
 	

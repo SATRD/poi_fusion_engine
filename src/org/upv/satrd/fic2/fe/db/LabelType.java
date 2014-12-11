@@ -58,7 +58,7 @@ public class LabelType {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM labeltype WHERE id="+id+";";
+			String sql = "SELECT * FROM labeltype WHERE id="+id;
 			rs = stmt.executeQuery(sql);			
 			
 			list = resultSetToArrayList(rs);        		
@@ -93,7 +93,7 @@ public class LabelType {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM labeltype WHERE name='"+name+"';";
+			String sql = "SELECT * FROM labeltype WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			
 			
@@ -132,7 +132,10 @@ public class LabelType {
 				
 				sql = "INSERT INTO labeltype (name) VALUES (?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);
+				
 				ps.setString(1,LabelType.getName());							
 				
 				ps.executeUpdate();
@@ -286,7 +289,7 @@ public class LabelType {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

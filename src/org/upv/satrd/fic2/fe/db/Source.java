@@ -85,7 +85,7 @@ public class Source {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM source WHERE id="+id+";";
+			String sql = "SELECT * FROM source WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux= null;
 			
@@ -143,7 +143,7 @@ public class Source {
 		try {	
 			
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM source WHERE name='"+name+"';";
+			String sql = "SELECT * FROM source WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			Object aux=null;
 			
@@ -197,7 +197,11 @@ public class Source {
 				
 				sql = "INSERT INTO source (name,description,urlaccess,categorymapping,apitypeid) VALUES (?,?,?,?,?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);
+				
+				
 				ps.setString(1,source.getName());				
 				if (source.getDescription() == null) ps.setNull(2, java.sql.Types.VARCHAR); else ps.setString(2,source.getDescription());
 				ps.setString(3,source.getUrlaccess());
@@ -466,7 +470,7 @@ public class Source {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase().toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

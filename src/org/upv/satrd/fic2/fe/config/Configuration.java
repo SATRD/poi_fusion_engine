@@ -12,15 +12,27 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class Configuration {
-	private String dbHost;		
+
+	private String dbConnString;
+	private String dbDriverName;
+	private String dbResetScript;
+	private String dbScriptSeparator = ";";
+	
+	private String dbHost;
 	private String dbPort;
+	private String dbName;
+
 	private String dbUser;		
 	private String dbPwd;
-	private String dbName;
+	
 	private String installDir;
 	private String mappingDir;
 	private String fusionDir;
 	private String apiRulesDir;
+	
+	private String geometryFromLonLatSrid;
+	private String lonFromPoint;
+	private String latFromPoint;
 	
 	private static org.apache.log4j.Logger log;
 	
@@ -53,8 +65,15 @@ public class Configuration {
 				    		
 			    			
 			    			fstNmElmntLst2 = fstElmnt2.getElementsByTagName("connectionString");
-						    dbHost = (fstNmElmntLst2.item(0)).getTextContent();						      
-				    				    				
+			    			dbConnString = (fstNmElmntLst2.item(0)).getTextContent();
+
+			    			fstNmElmntLst2 = fstElmnt2.getElementsByTagName("driverName");
+			    			dbDriverName = (fstNmElmntLst2.item(0)).getTextContent();
+
+			    			
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("host");
+						    dbHost = (fstNmElmntLst2.item(0)).getTextContent();
+			    			
 		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("port");
 						    dbPort = (fstNmElmntLst2.item(0)).getTextContent();
 
@@ -66,6 +85,21 @@ public class Configuration {
 		    				
 		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("name");
 						    dbName = (fstNmElmntLst2.item(0)).getTextContent();
+
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("resetScript");
+		    				dbResetScript = (fstNmElmntLst2.item(0)).getTextContent();
+		    				
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("scriptSeparator");
+		    				dbScriptSeparator = (fstNmElmntLst2.item(0)).getTextContent();
+		    				
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("geometryFromLonLatSrid");
+		    				geometryFromLonLatSrid = (fstNmElmntLst2.item(0)).getTextContent();
+		    				
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("lonFromPoint");
+		    				lonFromPoint = (fstNmElmntLst2.item(0)).getTextContent();
+		    				
+		    				fstNmElmntLst2 = fstElmnt2.getElementsByTagName("latFromPoint");
+		    				latFromPoint = (fstNmElmntLst2.item(0)).getTextContent();
 
 				    	} //if
 				    	  
@@ -94,26 +128,40 @@ public class Configuration {
 		}
 	}	//constructor	
 	
-	public String getHost() {return  dbHost;}		
-	public String getPort() {return dbPort;}
+	
+	public String getConnectionString() {return  dbConnString;}		
+	public String getDriverName() {return  dbDriverName;}
+	public String getResetScript() {return  dbResetScript;}
+	public String getScriptSeparator() {return  dbScriptSeparator;}
+	
+	public String getGeometryFromLonLatSrid() {return  geometryFromLonLatSrid;}
+	public String getLonFromPoint() {return  lonFromPoint;}
+	public String getLatFromPoint() {return  latFromPoint;}
+
 	public String getUser() {return dbUser;}		
 	public String getPwd() {return dbPwd;}
 	public String getName() {return dbName;}
+	public String getHost() {return dbHost;}
+	public String getPort() {return dbPort;}
 	public String getInstallDir() {return installDir;}
 	public String getMappingDir() {return mappingDir;}
 	public String getFusionDir() {return fusionDir;}
 	public String getApiRulesDir() {return apiRulesDir;}
 	
-	public String toString (){
+	public String toString () {
 		String response = null;
 		
 		response = "configuration\n";
 		response = response + "\tDB\n";
-		response = response + "\t\tconnectionString: "+dbHost+"\n";
+		response = response + "\t\tconnectionString: "+dbConnString+"\n";
+		response = response + "\t\tdriverName: "+dbDriverName+"\n";
+		response = response + "\t\tresetScript: "+dbResetScript+"\n";
+		response = response + "\t\tscriptSeparator: "+dbScriptSeparator+"\n";
+		response = response + "\t\thost: "+dbHost+"\n";
+		response = response + "\t\tname: "+dbName+"\n";
 		response = response + "\t\tport: "+dbPort+"\n";
 		response = response + "\t\tuser: "+dbUser+"\n";
 		response = response + "\t\tpwd: "+dbPwd+"\n";
-		response = response + "\t\tname: "+dbName+"\n";
 		response = response + "\tinstallDir: "+installDir+"\n";
 		response = response + "\tmappingDir: "+mappingDir+"\n";
 		response = response + "\tfusionDir: "+fusionDir+"\n";
@@ -121,6 +169,8 @@ public class Configuration {
 
 		return response;
 	}
+
+
 	
 	
 	

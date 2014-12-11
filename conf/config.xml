@@ -1,11 +1,22 @@
 <?xml version="1.0"?>
 <configuration>
   <DB>
-    <connectionString>127.0.0.1</connectionString>
+    <connectionString>jdbc:postgresql://onda.prodevelop.es:5432/cscfusion</connectionString>
+    <driverName>org.postgresql.Driver</driverName>
+	<user>osm</user>
+    <pwd>osmpas</pwd>
+    
+    <host>onda.prodevelop.es</host>
     <port>5432</port>
-	<user>postgres</user>
-    <pwd>postgres</pwd>
-    <name>ocd_tenerife</name>
+    <name>cscfusion</name>
+    
+    <resetScript>db/fe_ocd_reset_postgres.sql</resetScript>
+    <scriptSeparator>;</scriptSeparator>
+    
+    <geometryFromLonLatSrid>ST_SetSRID(ST_MakePoint({0}, {1}), {2})</geometryFromLonLatSrid>
+    <lonFromPoint>ST_X({0})</lonFromPoint>
+    <latFromPoint>ST_Y({0})</latFromPoint>
+    
   </DB>
   <platform>linux</platform>
   <installDir>/var/www/projects/ficontent/</installDir>

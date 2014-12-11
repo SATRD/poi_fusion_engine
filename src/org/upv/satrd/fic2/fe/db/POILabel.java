@@ -111,7 +111,7 @@ public class POILabel {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM poilabel WHERE id="+id+";";
+			String sql = "SELECT * FROM poilabel WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux= null;
 			
@@ -127,7 +127,7 @@ public class POILabel {
 				Integer labeltypeId = new Integer((list.get(0)).get("typeid").toString());
 				
 				//value field mandatory
-				String value = (list.get(0)).get("value").toString();				
+				String value = (list.get(0)).get("value").toString();
 				
 				//sourceId field mandatory
 				Integer sourceId = new Integer((list.get(0)).get("sourceid").toString());				
@@ -175,13 +175,27 @@ public class POILabel {
 			if ((poilabel.getValue()!=null) && (!poilabel.getValue().trim().isEmpty()) ){
 				try{   	
 					
-					sql = "INSERT INTO POILabel (poiid,typeid,value,sourceId,language,licenseId,updated) VALUES (?,?,?,?,?,?,?)";	
+					sql = "INSERT INTO POILabel (poiid,typeid,value,"
+							+ "sourceId,language,licenseId,updated) "
+							+ "VALUES (?,?,?,?,?,?,?)";	
 		
-					ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+					String generatedColumns[] = { "id" };
+					ps = con.prepareStatement(sql,
+							generatedColumns);
+					
 					ps.setInt(1,poilabel.getPOIId());
 					ps.setInt(2,poilabel.getLabelTypeId());		
 					//value field should be mandatory, but maybe one can insert NULL (e.g inserting source of POI.position as POILabel)
-					if (poilabel.getValue() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,poilabel.getValue());
+					if (poilabel.getValue() == null) {
+						ps.setNull(3, java.sql.Types.VARCHAR);
+					} else {
+						String val = poilabel.getValue();
+						if (val.length() > 1990) {
+							val = val.substring(0, 1990);
+						}
+						ps.setString(3,val);
+					}
+
 					ps.setInt(4,poilabel.getSourceId());
 					//language field might be set to null if it unknown
 					if (poilabel.getLanguage() == null) ps.setNull(5, java.sql.Types.VARCHAR); else ps.setString(5,poilabel.getLanguage());
@@ -373,7 +387,18 @@ public class POILabel {
 				ps.setInt(1,poilabel.getPOIId());
 				ps.setInt(2,poilabel.getLabelTypeId());		
 				//value field should be mandatory, but maybe one can insert NULL (e.g inserting source of POI.position as POILabel)
-				if (poilabel.getValue() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,poilabel.getValue());
+				
+				if (poilabel.getValue() == null) {
+					ps.setNull(3, java.sql.Types.VARCHAR);
+				} else {
+					String val = poilabel.getValue();
+					if (val.length() > 1990) {
+						val = val.substring(0, 1990);
+					}
+					ps.setString(3,val);
+				}
+				
+				
 				ps.setInt(4,poilabel.getSourceId());
 				//language field might be set to null if it unknown
 				if (poilabel.getLanguage() == null) ps.setNull(5, java.sql.Types.VARCHAR); else ps.setString(5,poilabel.getLanguage());
@@ -742,7 +767,7 @@ public class POILabel {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

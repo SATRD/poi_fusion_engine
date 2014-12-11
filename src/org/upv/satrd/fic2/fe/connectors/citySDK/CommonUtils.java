@@ -33,16 +33,31 @@ public class CommonUtils {
 		try{
 			//Get data
 			URL obj = new URL(url);
-			InputStream is = obj.openStream();		
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-	
+			
+			simpleLog("==============================================");
+			simpleLog("Request to URL: " + url);
+			InputStream is = obj.openStream();
+			
+			simpleLog("Stream opened.");
+			
+			BufferedReader rd = new BufferedReader(
+					new InputStreamReader(is,
+							Charset.forName(
+							"UTF-8")));
+
 			StringBuilder sb = new StringBuilder();
+			char[] char_buffer = new char[8 * 1024];
 		    int cp;
-		    while ((cp = rd.read()) != -1) {
-		      sb.append((char) cp);
+		    while ((cp = rd.read(char_buffer)) != -1) {
+		    // while ((cp = rd.read()) != -1) {
+		    	simpleLog("Receiving...");
+		    	sb.append(char_buffer, 0, cp);
+		    	// sb.append((char) cp);
 		    }
-	
-		    JSONObject json = new JSONObject(sb.toString());
+		    
+		    simpleLog("Receiving done.");
+		    String fix_encod = fixEncoding(sb.toString(), true); 
+		    JSONObject json = new JSONObject(fix_encod);
 	  
 		    is.close();
 		    rd.close();
@@ -58,6 +73,18 @@ public class CommonUtils {
 		return null;	
 	}
 	
+	private static String fixEncoding(String string, boolean doit) {
+		
+		if (!doit) {
+			return string;
+		}
+		
+		String resp = string;
+		resp = resp.replace("ïż½a", "ía");
+		resp = resp.replace("ïż½", "ó");
+		return resp;
+	}
+
 	/*********************************************************************************************************/
 	
 	/// Get a list of categories from one source (osm, dbpedia, poiproxy)
@@ -406,7 +433,6 @@ public class CommonUtils {
 		return lon;
 	}
 	
-	
 	//This method scans a POI given as a JSON object and returns its longitude
 	public static String getAddress(JSONObject poi){
 		
@@ -421,7 +447,6 @@ public class CommonUtils {
 		
 		return address;
 	}
-	
 	
 	//This method return current date as a java.sql.Date
 	public static Date getFormatedDateAsDate(){
@@ -515,6 +540,15 @@ public class CommonUtils {
 		
 		
 	}
+
 	
+	private static void simpleLog(String str) {
+		
+		if (true) {
+			System.out.println(str);
+		}
+		
+		
+	}
 
 }

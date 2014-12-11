@@ -7,13 +7,18 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.upv.satrd.fic2.fe.main.FE_sample_tenerife;
 
 
 public class POI {
@@ -81,7 +86,7 @@ public class POI {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM poi WHERE id="+id+";";
+			String sql = "SELECT * FROM poi WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux= null;
 			
@@ -97,13 +102,25 @@ public class POI {
 				Date updated = null;
 				aux = (list.get(0)).get("updated");
 				if (aux!=null){
-					String date = aux.toString(); 					
-					//convert to Date
-					updated = Date.valueOf(date);
+					if (aux instanceof Date) {
+						updated = (Date) aux;
+					} else {
+						if (aux instanceof Timestamp) {
+							updated = new Date(((Timestamp) aux).getTime());
+						} else {
+							String date = aux.toString(); 					
+							//convert to Date
+							updated = Date.valueOf(date);
+						}
+					}
 				}	
 				
 				//Get latitude and longitude
-				sql = "SELECT ST_X(position) from poi WHERE id="+id+";";
+				String lon_from_geom =
+						FE_sample_tenerife.config.getLonFromPoint();
+				lon_from_geom = lon_from_geom.replace("{0}", "p.position");
+				
+				sql = "SELECT " + lon_from_geom + " st_x from poi p WHERE p.id="+id;
 				rs = stmt.executeQuery(sql);
 				
 				list = resultSetToArrayList(rs);
@@ -111,8 +128,11 @@ public class POI {
 				if (!list.isEmpty()){					
 					Double longitude = new Double((list.get(0)).get("st_x").toString());
 					
-					
-					sql = "SELECT ST_Y(position) from poi WHERE id="+id+";";
+					String lat_from_geom =
+							FE_sample_tenerife.config.getLatFromPoint();
+					lat_from_geom = lat_from_geom.replace("{0}", "p.position");
+
+					sql = "SELECT " + lat_from_geom + " st_y from poi p WHERE p.id="+id;
 					rs = stmt.executeQuery(sql);
 					
 					list = resultSetToArrayList(rs);
@@ -150,7 +170,7 @@ public class POI {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM poi WHERE name='"+name+"';";
+			String sql = "SELECT * FROM poi WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			Object aux=null;
 			
@@ -172,7 +192,11 @@ public class POI {
 				}	
 				
 				//Get latitude and longitude
-				sql = "SELECT ST_X(position) from poi WHERE id="+id+";";
+				String lon_from_geom =
+						FE_sample_tenerife.config.getLonFromPoint();
+				lon_from_geom = lon_from_geom.replace("{0}", "p.position");
+				
+				sql = "SELECT " + lon_from_geom + " st_x from p.poi WHERE p.id="+id;
 				rs = stmt.executeQuery(sql);
 				
 				list = resultSetToArrayList(rs);
@@ -180,8 +204,11 @@ public class POI {
 				if (!list.isEmpty()){					
 					Double longitude = new Double((list.get(0)).get("st_x").toString());
 					
+					String lat_from_geom =
+							FE_sample_tenerife.config.getLatFromPoint();
+					lat_from_geom = lat_from_geom.replace("{0}", "p.position");
 					
-					sql = "SELECT ST_Y(position) from poi WHERE id="+id+";";
+					sql = "SELECT " + lat_from_geom + " st_y from poi p WHERE p.id="+id;
 					rs = stmt.executeQuery(sql);
 					
 					list = resultSetToArrayList(rs);
@@ -217,14 +244,28 @@ public class POI {
 		PreparedStatement ps;		
 		
 			try{   					
-								
-				sql = "INSERT INTO poi (name,position,updated) VALUES (?,ST_SetSRID(ST_MakePoint(?,?), 4326),?)";	
+				
+				String geom_xysrid =
+						FE_sample_tenerife.config.getGeometryFromLonLatSrid();
+				geom_xysrid = geom_xysrid.replace("{0}",
+						formatter().format(poi.getLongitude()));
+				geom_xysrid = geom_xysrid.replace("{1}",
+						formatter().format(poi.getLatitude()));
+				geom_xysrid = geom_xysrid.replace("{2}", "4326");
+			
+				/*
+				sql = "INSERT INTO poi (name,position,updated) VALUES "
+						+ "(?,ST_SetSRID(ST_MakePoint(?,?), 4326),?)";
+						*/	
+				sql = "INSERT INTO poi (name,position,updated) VALUES "
+						+ "(?," + geom_xysrid + ",?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);
+				
 				ps.setString(1,poi.getName());	
-				ps.setDouble(2,poi.getLongitude());	
-				ps.setDouble(3,poi.getLatitude());	
-				ps.setDate(4,poi.getUpdated());										
+				ps.setDate(2,poi.getUpdated());										
 				
 				ps.executeUpdate();
 				
@@ -291,13 +332,21 @@ public class POI {
 		PreparedStatement ps;		
 		
 			try{   	
-				
-				sql = "UPDATE POI SET name=?, position=ST_SetSRID(ST_MakePoint(?,?), 4326), updated=? WHERE id="+poi.getId();
+				String geom_xysrid =
+						FE_sample_tenerife.config.getGeometryFromLonLatSrid();
+				geom_xysrid = geom_xysrid.replace("{0}",
+						formatter().format(poi.getLongitude()));
+				geom_xysrid = geom_xysrid.replace("{1}",
+						formatter().format(poi.getLatitude()));
+				geom_xysrid = geom_xysrid.replace("{2}", "4326");
+
+				sql = "UPDATE POI SET name=?, position="
+						+ geom_xysrid
+						+ ", updated=? WHERE id="+poi.getId();
 	
 				ps = con.prepareStatement(sql);	
-				ps.setString(1,poi.getName());	
-				ps.setDouble(2,poi.getLongitude());
-				ps.setDouble(3,poi.getLatitude());												
+				ps.setString(1,poi.getName());
+				ps.setDate(2,poi.getUpdated());
 				
 				ps.executeUpdate();
 				
@@ -332,7 +381,7 @@ public class POI {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);
@@ -427,6 +476,18 @@ public class POI {
 		
 		
 	}
+	
+	private static DecimalFormat fmt = null;
+	private static DecimalFormat formatter() {
+		if (fmt == null) {
+			fmt = new DecimalFormat("#.#######");
+			DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
+			fmt.setDecimalFormatSymbols(dfs);
+		}
+		return fmt;
+	}
+	
+
 	
 	
 

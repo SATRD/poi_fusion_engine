@@ -55,7 +55,7 @@ public class Component {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM component WHERE id="+id+";";
+			String sql = "SELECT * FROM component WHERE id="+id;
 			rs = stmt.executeQuery(sql);			
 			
 			list = resultSetToArrayList(rs);        		
@@ -90,7 +90,7 @@ public class Component {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM Component WHERE name='"+name+"';";
+			String sql = "SELECT * FROM Component WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			
 			
@@ -129,7 +129,9 @@ public class Component {
 				
 				sql = "INSERT INTO component (name) VALUES (?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);	
 				ps.setString(1,component.getName());							
 				
 				ps.executeUpdate();
@@ -280,7 +282,7 @@ public class Component {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

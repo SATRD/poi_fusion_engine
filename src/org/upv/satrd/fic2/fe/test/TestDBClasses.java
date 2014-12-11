@@ -1,6 +1,7 @@
 package org.upv.satrd.fic2.fe.test;
 
 
+import java.io.File;
 import java.sql.Connection;
 
 import org.apache.log4j.Logger;
@@ -17,7 +18,9 @@ import org.upv.satrd.fic2.fe.db.POICategory;
 import org.upv.satrd.fic2.fe.db.POILabel;
 import org.upv.satrd.fic2.fe.db.POISource;
 import org.upv.satrd.fic2.fe.db.Source;
-import org.upv.satrd.fic2.fe.main.PostgreSQL;
+import org.upv.satrd.fic2.fe.main.FE_sample_tenerife;
+import org.upv.satrd.fic2.fe.main.OutputDB;
+
 
 
 public class TestDBClasses {
@@ -36,31 +39,40 @@ public class TestDBClasses {
 		
 		//Load configuration parameters of the OCD in order to access the PostGRESQL database
 		Configuration config = new Configuration(configurationFile);
-		Connection con = PostgreSQL.conectDB(config.getHost(), config.getPort(), config.getUser(), config.getPwd(), config.getName());	
+		Connection con = OutputDB.connectDB(
+				config.getConnectionString(),
+				config.getUser(),
+				config.getPwd(),
+				config.getDriverName());	
 		
 		
-		//Reset and Init database. NOTE!!! It is supposed that psql is installed and in the path, otherwise we cannot execute any script
-		log.info("Reseting database "+config.getName());
-		System.out.println("Reseting database "+config.getName());
-		String sqlscript = "db/fe_ocd_reset.sql";
+		//Reset and Init database.
+		// NOTE!!! It is supposed that psql is installed
+		// and in the path, otherwise we cannot execute any script
+		log.info("Reseting tables in database "+config.getName()
+				+ " (user: " + config.getUser() + ")");
+		System.out.println("Reseting tables in database "+config.getName()
+				+ " (user: " + config.getUser() + ")");
+
+		String sqlscript = config.getResetScript();
 		
-	     try {
-	         Runtime rt = Runtime.getRuntime();
-	         String executeSqlCommand = "psql"
-	         		+ " -U " + config.getUser()
-	         		+ " -p " + config.getPort()
-	         		+ " -h " + config.getHost()
-	         		+ " -f " + sqlscript
-	         		+ " " + config.getName();
-	         Process pr = rt.exec(executeSqlCommand);
-	         pr.waitFor();	         
-	      } catch (Exception e) {	        
-	        log.error(e.getMessage()+".Exiting...");
+		File script_file = new File(
+				System.getProperty("user.dir") + File.separator + sqlscript);
+		try {
+			FE_sample_tenerife.executeSql(
+					script_file,
+					config.getDriverName(),
+					config.getUser(),
+					config.getPwd(),
+					config.getConnectionString(),
+					config.getScriptSeparator());
+		} catch (Exception e1) {
+	        log.error(e1.getMessage()+".Exiting...");
 	        System.exit(-1);
-	        
-	      }		
-	     System.out.println("Database has been reset");
-	     log.info("Database has been reset");
+		}
+		
+	     System.out.println("Database tables have been reset");
+	     log.info("Database tables have been reset");
 		
 	     
 	     

@@ -68,7 +68,7 @@ public class License {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM license WHERE id="+id+";";
+			String sql = "SELECT * FROM license WHERE id="+id;
 			rs = stmt.executeQuery(sql);
 			Object aux = null;
 			
@@ -114,7 +114,7 @@ public class License {
 		
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM license WHERE name='"+name+"';";
+			String sql = "SELECT * FROM license WHERE name='"+name+"'";
 			rs = stmt.executeQuery(sql);
 			Object aux = null;
 			
@@ -162,7 +162,10 @@ public class License {
 				
 				sql = "INSERT INTO license (name,description,info) VALUES (?,?,?)";	
 	
-				ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+				String generatedColumns[] = { "id" };
+				ps = con.prepareStatement(sql,
+						generatedColumns);
+				
 				ps.setString(1,license.getName());				
 				if (license.getDescription() == null) ps.setNull(2, java.sql.Types.VARCHAR); else ps.setString(2,license.getDescription());	
 				if (license.getInfo() == null) ps.setNull(3, java.sql.Types.VARCHAR); else ps.setString(3,license.getInfo());							
@@ -341,7 +344,7 @@ public class License {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

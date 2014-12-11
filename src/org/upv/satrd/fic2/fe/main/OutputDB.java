@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
+import org.upv.satrd.fic2.fe.config.Configuration;
 import org.upv.satrd.fic2.fe.db.APIType;
 import org.upv.satrd.fic2.fe.db.Category;
 import org.upv.satrd.fic2.fe.db.City;
@@ -16,20 +17,40 @@ import org.upv.satrd.fic2.fe.db.Source;
 import org.upv.satrd.fic2.fe.fusionrules.FusionRule;
 import org.upv.satrd.fic2.fe.fusionrules.FusionRules;
 
-public class PostgreSQL {
+public class OutputDB {
 	
 	private static org.apache.log4j.Logger log;
 	private static Statement stmt = null;
 	private static ResultSet rs = null;
 	
+	public static String idToString(Object id) {
+		if (id instanceof Integer || id instanceof Long) {
+			return id.toString();
+		}
+		
+		if (id instanceof byte[]) {
+			System.out.println("ID is byte[]...");
+		}
+		
+		return id.toString();
+	}
 	
-	public static Connection conectDB (String host, String port, String user, String pwd, String name){
-		log = Logger.getLogger(org.upv.satrd.fic2.fe.main.PostgreSQL.class);
+	
+	public static Connection connectDB(
+			String connStr,
+			String user, String pwd,
+			String driverName){
+		
+		log = Logger.getLogger(OutputDB.class);
 	
 		Connection con = null;
 		try {
-			Class.forName("org.postgresql.Driver");
-			con = DriverManager.getConnection("jdbc:postgresql://"+host+":"+port+"/"+name,user, pwd);
+			Class.forName(driverName);
+			// DriverManager.getConne
+			con = DriverManager.getConnection(
+					connStr,
+					user,
+					pwd);
 
 			con.setAutoCommit(true);
 		} catch ( Exception e ) {
@@ -40,7 +61,7 @@ public class PostgreSQL {
 		return con;
 	}
 	
-	public static void disconectDB (Connection con){
+	public static void disconnectDB (Connection con){
 		try {
 			con.close();
 		} catch ( Exception e ) {
@@ -57,7 +78,7 @@ public class PostgreSQL {
 	        HashMap<String, Object> row = new HashMap<String, Object>();
 	        
 	        for(int i=1; i<=columns; i++){
-	          row.put(md.getColumnName(i),rs.getObject(i));
+	          row.put(md.getColumnName(i).toLowerCase(),rs.getObject(i));
 	        }
 	        
 	        results.add(row);

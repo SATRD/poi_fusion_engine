@@ -36,6 +36,16 @@ public class OutputDB {
 	}
 	
 	
+	private static String configurationFile;
+	public static Configuration config;
+	
+	//These methods are required to reload the configuration from a given File
+	public static void setConfiguration(String path){
+		configurationFile = path;
+		config = new Configuration(configurationFile);
+	}
+	
+	
 	public static Connection connectDB(
 			String connStr,
 			String user, String pwd,

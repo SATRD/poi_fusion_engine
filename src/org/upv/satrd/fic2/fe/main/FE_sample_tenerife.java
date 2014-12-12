@@ -36,19 +36,30 @@ public class FE_sample_tenerife {
 	private static String configurationFile = "conf/config.xml";
 	public static Configuration config = new Configuration(configurationFile);
 	
+	//These methods are required to reload the configuration from a given File
+	public static void setConfigurationString(String path){
+		configurationFile = path;
+		config = new Configuration(configurationFile);
+	}
+	
+	
+	
+	
 	//@SuppressWarnings("rawtypes")
 	public static void main(String[] args) {
 		
 		log = Logger.getLogger(org.upv.satrd.fic2.fe.main.FE_sample_tenerife.class);	
 		
 		
-		//Load configuration parameters of the OCD in order to access the PostGRESQL database
-		// Configuration config = new Configuration(configurationFile);
+		//Load configuration parameters of the OCD in order to access the PostGRESQL database		
 		Connection con = OutputDB.connectDB(
 				config.getConnectionString(),
 				config.getUser(),
 				config.getPwd(),
 				config.getDriverName());	
+		
+		
+		OutputDB.setConfiguration(configurationFile);
 		
 		
 		//Reset and Init database. FIXME It is supposed that psql is installed and in the path, otherwise we cannot execute any script

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.upv.satrd.fic2.fe.main.FE_sample_tenerife;
+import org.upv.satrd.fic2.fe.main.OutputDB;
 
 
 public class POI {
@@ -117,7 +117,7 @@ public class POI {
 				
 				//Get latitude and longitude
 				String lon_from_geom =
-						FE_sample_tenerife.config.getLonFromPoint();
+						OutputDB.config.getLonFromPoint();
 				lon_from_geom = lon_from_geom.replace("{0}", "p.position");
 				
 				sql = "SELECT " + lon_from_geom + " st_x from poi p WHERE p.id="+id;
@@ -129,7 +129,7 @@ public class POI {
 					Double longitude = new Double((list.get(0)).get("st_x").toString());
 					
 					String lat_from_geom =
-							FE_sample_tenerife.config.getLatFromPoint();
+							OutputDB.config.getLatFromPoint();
 					lat_from_geom = lat_from_geom.replace("{0}", "p.position");
 
 					sql = "SELECT " + lat_from_geom + " st_y from poi p WHERE p.id="+id;
@@ -193,7 +193,7 @@ public class POI {
 				
 				//Get latitude and longitude
 				String lon_from_geom =
-						FE_sample_tenerife.config.getLonFromPoint();
+						OutputDB.config.getLonFromPoint();
 				lon_from_geom = lon_from_geom.replace("{0}", "p.position");
 				
 				sql = "SELECT " + lon_from_geom + " st_x from p.poi WHERE p.id="+id;
@@ -205,7 +205,7 @@ public class POI {
 					Double longitude = new Double((list.get(0)).get("st_x").toString());
 					
 					String lat_from_geom =
-							FE_sample_tenerife.config.getLatFromPoint();
+							OutputDB.config.getLatFromPoint();
 					lat_from_geom = lat_from_geom.replace("{0}", "p.position");
 					
 					sql = "SELECT " + lat_from_geom + " st_y from poi p WHERE p.id="+id;
@@ -246,7 +246,7 @@ public class POI {
 			try{   					
 				
 				String geom_xysrid =
-						FE_sample_tenerife.config.getGeometryFromLonLatSrid();
+						OutputDB.config.getGeometryFromLonLatSrid();
 				geom_xysrid = geom_xysrid.replace("{0}",
 						formatter().format(poi.getLongitude()));
 				geom_xysrid = geom_xysrid.replace("{1}",
@@ -333,7 +333,7 @@ public class POI {
 		
 			try{   	
 				String geom_xysrid =
-						FE_sample_tenerife.config.getGeometryFromLonLatSrid();
+						OutputDB.config.getGeometryFromLonLatSrid();
 				geom_xysrid = geom_xysrid.replace("{0}",
 						formatter().format(poi.getLongitude()));
 				geom_xysrid = geom_xysrid.replace("{1}",

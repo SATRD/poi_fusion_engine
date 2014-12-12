@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-9.1-903.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/secondstring-20120620.jar"/>
+	<classpathentry kind="lib" path="lib/apache-ant-launcher-1.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/apache-ant-1.9.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

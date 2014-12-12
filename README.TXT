@@ -35,4 +35,6 @@ db/		contains a SQL script to reset the OCD database. It is supposed that the da
 
 lib/	contains all necessary libraries
 
+services/	List of services making use of the FE. Currently only the inquiry_api is provided as WAR with source classes, including two examples of using the inquiry API
+
 build.xml The project has been generated under Eclipse Luna as an Ant file. You may import the whole project under Eclipse for simplicity	

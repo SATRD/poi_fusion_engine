@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <configuration>
   <DB>
-    <connectionString>jdbc:postgresql://onda.prodevelop.es:5432/cscfusion</connectionString>
+    <connectionString>jdbc:postgresql://127.0.0.1:5432/ocd_tenerife</connectionString>
     <driverName>org.postgresql.Driver</driverName>
-	<user>osm</user>
-    <pwd>osmpas</pwd>
+	<user>postgres</user>
+    <pwd>postgres</pwd>
     
-    <host>onda.prodevelop.es</host>
+    <host>127.0.0.1</host>
     <port>5432</port>
-    <name>cscfusion</name>
+    <name>ocd_tenerife</name>
     
     <resetScript>db/fe_ocd_reset_postgres.sql</resetScript>
     <scriptSeparator>;</scriptSeparator>

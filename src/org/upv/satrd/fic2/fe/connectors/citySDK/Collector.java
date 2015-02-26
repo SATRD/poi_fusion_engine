@@ -62,7 +62,7 @@ public class Collector {
 						log.debug("ProjectedCategory "+h+": "+current_projectedCategory);
 						
 						JSONObject listPois_aux = CommonUtils.getPOIListBySourceAndCategory(source.getUrlaccess(),
-								source.getName(),current_projectedCategory,bbox,limit.toString());
+								source.getName(),current_projectedCategory,bbox,limit.toString(), city);
 						
 						if (h==0){
 							//Take the first result and store it
@@ -83,7 +83,7 @@ public class Collector {
 					log. debug("Corresponding category for '"+category+"' in source "+source.getName()+" : "+projectedCategory);					
 					
 					JSONObject listPois = CommonUtils.getPOIListBySourceAndCategory(source.getUrlaccess(),
-							source.getName(),projectedCategory,bbox,limit.toString());
+							source.getName(),projectedCategory,bbox,limit.toString(),city);
 	        						
 					//Get the array of the retrieved object
 					selectedPois = listPois.getJSONArray("poi");	
@@ -136,7 +136,7 @@ public class Collector {
 						log.debug("ProjectedCategory "+h+": "+current_projectedCategory);
 						
 						ArrayList<JSONObject> selectedPois_aux = CommonUtils.getZonePOIs(source.getUrlaccess(),source.getName(), current_projectedCategory, lat, lon, 
-		        				maxDistance, name, similarityPercentage);
+		        				maxDistance, name, similarityPercentage,city);
 						if (h==0){
 							selectedPois = selectedPois_aux;
 							
@@ -156,7 +156,7 @@ public class Collector {
 					log. debug("Corresponding category for '"+category+"' in source "+source.getName()+" : "+projectedCategory);					
 				
 					selectedPois = CommonUtils.getZonePOIs(source.getUrlaccess(),source.getName(), projectedCategory, lat, lon, 
-        				maxDistance, name, similarityPercentage);
+        				maxDistance, name, similarityPercentage,city);
 				}       		
         						
 				//TODO :this information may be stored for statistics after the fusion has taken place
@@ -184,7 +184,7 @@ public class Collector {
 		JSONArray returnedPois = new JSONArray();			
 		try {		
 				
-				JSONObject listPois = CommonUtils.getImgPOIList(source.getUrlaccess(),category,point_radius,limit.toString());				
+				JSONObject listPois = CommonUtils.getImgPOIList(source.getUrlaccess(),category,point_radius,limit.toString(),city);				
 	    						
 				//Get the array of the retrieved object
 				returnedPois = listPois.getJSONArray("poi");	

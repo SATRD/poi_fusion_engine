@@ -113,15 +113,19 @@ public class CommonUtils {
 	/*********************************************************************************************************/
 	
 	/// Get a list of POIs of one source (osm, dbpedia, poiproxy) and one category
-	public static JSONObject getPOIListBySourceAndCategory(String server, String source, String category, String bbox, String limit){
+	public static JSONObject getPOIListBySourceAndCategory(String server, String source, String category, String bbox, String limit, String city){
 		
 		String url;
+		url = server+"pois/search?category="+category+"&limit="+limit+"&coords="+bbox;
 		if (server.contains("osm")){
 			//TODO fix this for any city. This is done in order to make OSM run faster
-			url = server+"pois/search?category="+category+"&limit="+limit+"&city=sctenerife"+"&coords="+bbox;
-		}else{
+			if (city.equalsIgnoreCase("tenerife")){
+				url = server+"pois/search?category="+category+"&limit="+limit+"&city=sctenerife"+"&coords="+bbox;
+			}
+			if (city.equalsIgnoreCase("valencia")){
+				url = server+"pois/search?category="+category+"&limit="+limit+"&city=valencia"+"&coords="+bbox;
+			}
 			
-			url = server+"pois/search?category="+category+"&limit="+limit+"&coords="+bbox;
 		}
 		JSONObject response = request(url);
 		
@@ -210,16 +214,19 @@ public class CommonUtils {
 	/*********************************************************************************************************/
 	
 		/// Get a list of POIs from poiproxy. Here instead of bbox we have point and radius
-		public static JSONObject getImgPOIList(String server, String category, String point_radius, String limit){
+		public static JSONObject getImgPOIList(String server, String category, String point_radius, String limit, String city){
 					
 
 			String url;
+			url = server+"pois/search?category="+category+"&limit="+limit+"&coords="+point_radius;
 			if (server.contains("osm")){
 				//TODO fix this for any city. This is done in order to make OSM run faster
-				url = server+"pois/search?category="+category+"&limit="+limit+"&city=sctenerife"+"&coords="+point_radius;
-			}else{
-				
-				url = server+"pois/search?category="+category+"&limit="+limit+"&coords="+point_radius;
+				if (city.equalsIgnoreCase("tenerife")){
+					url = server+"pois/search?category="+category+"&limit="+limit+"&city=sctenerife"+"&coords="+point_radius;
+				}
+				if (city.equalsIgnoreCase("valencia")){
+					url = server+"pois/search?category="+category+"&limit="+limit+"&city=valencia"+"&coords="+point_radius;
+				}			
 			}
 			
 			JSONObject response = request(url);			
@@ -234,15 +241,19 @@ public class CommonUtils {
 	
 	
 	/// Get a list of POIs in a zone of one source (osm, dbpedia)
-	public static ArrayList<JSONObject> getZonePOIs(String server, String source, String category, String lat, String lon, String r, String sourceName, String percent){
+	public static ArrayList<JSONObject> getZonePOIs(String server, String source, String category, String lat, String lon, String r, 
+			String sourceName, String percent, String city){
 		
 		String url;
+		url = server+"pois/search?category="+category+"&coords="+lat+","+lon+","+r;
 		if (server.contains("osm")){		
 			//TODO fix this for any city. This is done in order to make OSM run faster
-			url = server+"pois/search?category="+category+"&city=sctenerife"+"&coords="+lat+","+lon+","+r;	
-		}else{
-			
-			url = server+"pois/search?category="+category+"&coords="+lat+","+lon+","+r;	
+			if (city.equalsIgnoreCase("tenerife")){
+				url = server+"pois/search?category="+category+"&city=sctenerife"+"&coords="+lat+","+lon+","+r;
+			}
+			if (city.equalsIgnoreCase("valencia")){
+				url = server+"pois/search?category="+category+"&city=valencia"+"&coords="+lat+","+lon+","+r;
+			}				
 		}
 		
 		

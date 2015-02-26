@@ -53,7 +53,7 @@
 	
   <target name="run" depends="compile" >
   	<!--	<java classname="org.upv.satrd.fic2.fe.test.TestDBClasses" fork="true" dir="${build}">	 -->
-	       <java classname="org.upv.satrd.fic2.fe.main.FE_sample_tenerife" fork="true" dir="${build}">
+	       <java classname="org.upv.satrd.fic2.fe.main.FE_sample_valencia" fork="true" dir="${build}">
 	       		<classpath>	  	  	  	      	  				  
 	       			<pathelement path="${build}"/>
 	       			  <fileset dir="${build}/lib">
